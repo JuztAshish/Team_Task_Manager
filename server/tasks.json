@@ -5,7 +5,7 @@
     "description": "New Task",
     "dueDate": "2026-06-19",
     "assignee": "Ashish",
-    "completed": true,
+    "completed": false,
     "createdAt": "2026-06-04T13:15:37.930Z",
     "order": 3
   },
