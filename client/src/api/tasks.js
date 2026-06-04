@@ -1,8 +1,11 @@
 // API client: handles all backend communication
-// Base URL configured via environment variables for deployment flexibility
+// By default the app will use the deployed backend on Render. You can
+// override this at runtime by setting `REACT_APP_API_URL` to your API host
+// (for example during local development set it to http://localhost:5000).
+const DEFAULT_API = "https://team-task-manager-6weh.onrender.com";
 const BASE_URL = process.env.REACT_APP_API_URL
   ? `${process.env.REACT_APP_API_URL}/api/tasks`
-  : "/api/tasks";
+  : `${DEFAULT_API}/api/tasks`;
 
 export async function fetchTasks() {
   const response = await fetch(BASE_URL);

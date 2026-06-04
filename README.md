@@ -13,9 +13,11 @@ A full-stack personal task manager built as a monorepo with a React frontend and
 ## Live Demo Links
 
 - **Frontend:** Not deployed yet
-- **Backend:** Not deployed yet
+- **Backend:** https://team-task-manager-6weh.onrender.com
 
-> Live demo links will be updated after deployment.
+> The frontend defaults to the deployed backend above. To run the frontend against
+> a different backend (for example your local server), set the environment variable
+> `REACT_APP_API_URL` before starting the client.
 
 ---
 
@@ -55,7 +57,10 @@ Then open **http://localhost:3000**.
 
 ## API Documentation
 
-Base URL: `http://localhost:5000/api/tasks`
+Base URL (production): `https://team-task-manager-6weh.onrender.com/api/tasks`
+
+Note: locally the client will use `process.env.REACT_APP_API_URL` if provided.
+Set `REACT_APP_API_URL=http://localhost:5000` to target a local server during development.
 
 ### `GET /api/tasks`
 
