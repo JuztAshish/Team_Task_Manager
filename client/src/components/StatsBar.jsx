@@ -1,10 +1,4 @@
-// ─────────────────────────────────────────────
-// src/components/StatsBar.jsx  –  Summary counters
-// ─────────────────────────────────────────────
-
-// This is a "presentational" component — it only displays data.
-// It receives props and renders them. No state, no API calls.
-
+// Statistics bar: displays task counters (total, active, completed, overdue)
 function StatsBar({ stats }) {
   return (
     <div className="stats-bar">

@@ -1,13 +1,8 @@
-// ─────────────────────────────────────────────
-// store.js  –  File-backed JSON storage for tasks
-// ─────────────────────────────────────────────
-
 const fs = require("fs");
 const path = require("path");
 
+// File-backed JSON storage: persists tasks to disk
 const DATA_FILE = path.join(__dirname, "tasks.json");
-
-// In-memory cache of tasks, kept in sync with the JSON file.
 let tasks = [];
 
 function loadSync() {
@@ -21,7 +16,6 @@ function loadSync() {
 		const raw = fs.readFileSync(DATA_FILE, "utf8");
 		tasks = JSON.parse(raw || "[]");
 	} catch (err) {
-		// If file is corrupt or unreadable, fall back to empty array
 		tasks = [];
 		fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2), "utf8");
 	}
@@ -31,12 +25,10 @@ function saveSync() {
 	fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2), "utf8");
 }
 
-// Initialize on require
 loadSync();
 
-// Public API
+// Public API for task storage operations
 module.exports = {
-	// Return a shallow copy to prevent callers from mutating without saving
 	getAll() {
 		return [...tasks];
 	},
@@ -62,7 +54,6 @@ module.exports = {
 		return true;
 	},
 
-	// Replace whole list (not used currently, but useful)
 	replaceAll(newTasks) {
 		tasks = Array.isArray(newTasks) ? newTasks : [];
 		saveSync();

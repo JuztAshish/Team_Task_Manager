@@ -1,11 +1,3 @@
-// ─────────────────────────────────────────────
-// src/App.jsx  –  Root component
-// ─────────────────────────────────────────────
-// This is the top-level component. It:
-//   1. Calls our custom hook to get all data + actions
-//   2. Manages UI state (showForm toggle)
-//   3. Renders the page layout with child components
-
 import { useState } from "react";
 import { useTasks } from "./hooks/useTasks";
 import TaskForm from "./components/TaskForm";
@@ -14,9 +6,8 @@ import FilterBar from "./components/FilterBar";
 import StatsBar from "./components/StatsBar";
 import "./App.css";
 
+// Root component: manages task list, filtering, and UI state
 function App() {
-  // ── CUSTOM HOOK ────────────────────────────────
-  // All task data and operations come from useTasks
   const {
     tasks,
     loading,
@@ -62,21 +53,15 @@ function App() {
     setDragOverTaskId(null);
   };
 
-  // ── LOCAL UI STATE ─────────────────────────────
-  // showForm controls whether the Add Task form is visible
-  // This is kept in App because it's pure UI — not related to data
   const [showForm, setShowForm] = useState(false);
 
-  // ── HANDLE ADD ─────────────────────────────────
   const handleAdd = async (formData) => {
     await addTask(formData);
-    setShowForm(false); // hide the form after successful add
+    setShowForm(false);
   };
 
-  // ── RENDER ─────────────────────────────────────
   return (
     <div className="app">
-      {/* ── HEADER ── */}
       <header className="app-header">
         <div className="header-content">
           <div>
@@ -91,15 +76,17 @@ function App() {
           </button>
         </div>
 
-        {/* Stats are always visible at the top */}
         <StatsBar stats={stats} />
       </header>
 
       <main className="app-main">
-        {/* ── ADD TASK FORM (toggled) ── */}
-        
+        {showForm && (
+          <div className="form-container">
+            <TaskForm onSubmit={handleAdd} onCancel={() => setShowForm(false)} />
+          </div>
+        )}
 
-        {/* ── FILTER + SEARCH BAR ── */}
+        <FilterBar
         <FilterBar
           filter={filter}
           setFilter={setFilter}
@@ -108,12 +95,11 @@ function App() {
           sortDue={sortDue}
           setSortDue={setSortDue}
         />
-{showForm && (
+        {showForm && (
           <div className="form-container">
             <TaskForm onSubmit={handleAdd} onCancel={() => setShowForm(false)} />
           </div>
         )}
-        {/* ── LOADING STATE ── */}
         {loading && (
           <div className="state-message">
             <div className="spinner" />
@@ -121,15 +107,13 @@ function App() {
           </div>
         )}
 
-        {/* ── ERROR STATE ── */}
         {error && (
           <div className="state-message error-state">
             <p>⚠️ {error}</p>
           </div>
         )}
 
-        {/* ── EMPTY STATE ── */}
-        {/* Show only when not loading, no error, and no tasks */}
+        {!loading && !error && tasks.length === 0 && (
         {!loading && !error && tasks.length === 0 && (
           <div className="empty-state">
             <p className="empty-icon">📋</p>
@@ -142,12 +126,9 @@ function App() {
           </div>
         )}
 
-        {/* ── TASK LIST ── */}
-        {/* tasks.map() renders one TaskCard per task */}
         {!loading && tasks.length > 0 && (
           <div className="task-list">
             {tasks.map((task) => (
-              // 'key' is required by React to track list items efficiently
               <TaskCard
                 key={task.id}
                 task={task}
