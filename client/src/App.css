@@ -308,6 +308,46 @@ body {
   font-size: 0.875rem;
 }
 
+/* SVG icon sizing and alignment for lucide-react icons */
+.btn-primary svg {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.empty-icon svg {
+  width: 48px;
+  height: 48px;
+  color: var(--color-muted);
+}
+
+.search-icon svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+}
+
+.search-clear svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox svg {
+  width: 14px;
+  height: 14px;
+  color: white;
+}
+
 .search-input {
   width: 100%;
   padding: 9px 36px 9px 32px;
