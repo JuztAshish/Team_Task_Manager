@@ -1,135 +1,78 @@
 # Team Task Manager
 
-A full-stack task management app built with **Node.js + Express** (backend) and **React** (frontend).
+A full-stack personal task manager built as a monorepo with a React frontend and an Express backend. The app supports task creation, editing, completion, drag-and-drop reordering, filtering, searching, and file-backed persistence.
 
 ---
 
-## Exercise Chosen
+## Project Title & Brief Description
 
-**Exercise 1 — Personal Task Manager**, extended to a Team Task Manager that also supports assigning tasks to team members.
+**Team Task Manager** is the personal task manager exercise implemented as a monorepo with `/client` and `/server`. The frontend is a React SPA, and the backend is an Express API that persists tasks to a JSON file so data survives restarts.
 
 ---
 
-## Live Demo
+## Live Demo Links
 
-> Deploy steps are in the **Deployment** section below. Fill in your links here after deploying.
+- **Frontend:** Not deployed yet
+- **Backend:** Not deployed yet
 
-- **Frontend:** `https://your-app.vercel.app`
-- **Backend:** `https://your-api.render.com`
+> Live demo links will be updated after deployment.
 
 ---
 
 ## Tech Stack
 
-| Layer | Tech | Why |
-|-------|------|-----|
-| Backend | Node.js + Express | Lightweight, minimal setup, exactly what the brief asked for |
-| Frontend | React 18 (Create React App) | Functional components + hooks as required |
-| Storage | In-memory array | Simplest option; avoids database setup complexity |
-| Styling | Plain CSS with CSS variables | No extra dependencies; shows understanding of core CSS |
-| IDs | `uuid` package | Generates collision-safe unique IDs for tasks |
-| CORS | `cors` package | Lets the React dev server (port 3000) talk to Express (port 5000) |
-
----
-
-## Project Structure
-
-```
-task-manager/
-├── package.json          ← root scripts to run both apps
-│
-├── server/
-│   ├── package.json
-│   ├── index.js          ← Express app setup, middleware, starts server
-│   ├── store.js          ← In-memory array (our "database")
-│   └── routes/
-│       └── tasks.js      ← All CRUD route handlers
-│
-└── client/
-    ├── package.json       ← "proxy" field routes /api calls to Express
-    ├── public/
-    │   └── index.html
-    └── src/
-        ├── index.js       ← React entry point
-        ├── App.jsx        ← Root component, layout
-        ├── App.css        ← All styles
-        ├── api/
-        │   └── tasks.js   ← All fetch() calls to backend (one place)
-        ├── hooks/
-        │   └── useTasks.js ← Custom hook: data fetching + state logic
-        └── components/
-            ├── TaskForm.jsx   ← Add / Edit form
-            ├── TaskCard.jsx   ← Single task row
-            ├── FilterBar.jsx  ← Status filter + search input
-            └── StatsBar.jsx   ← Active / Done / Overdue counters
-```
+- **React 18 + Create React App**: fast frontend development with hooks and component-driven UI.
+- **Node.js + Express**: minimal backend for RESTful task operations.
+- **uuid**: unique IDs for tasks.
+- **cors**: allows the React app to communicate with the backend in development.
+- **nodemon**: convenient backend hot reload during development.
+- **Plain CSS**: lightweight styling with no additional CSS framework.
 
 ---
 
 ## How to Run Locally
 
-> Assumes you have **Node.js 18+** installed. That's all you need.
-
-### Step 1 — Clone and install
+Assumes you have only **Node.js 18+** installed.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/team-task-manager.git
-cd team-task-manager
+git clone https://github.com/JuztAshish/Team_Task_Manager.git
+cd Team_Task_Manager
 
-# Install server dependencies
-cd server && npm install && cd ..
+# Install dependencies
+npm install --prefix server
+npm install --prefix client
 
-# Install client dependencies
-cd client && npm install && cd ..
+# Start backend
+npm run dev --prefix server
+
+# Start frontend in a second terminal
+npm start --prefix client
 ```
 
-### Step 2 — Start the backend
-
-```bash
-cd server
-npm run dev        # uses nodemon for auto-restart on file changes
-# Server runs on http://localhost:5000
-```
-
-### Step 3 — Start the frontend (new terminal tab)
-
-```bash
-cd client
-npm start          # opens http://localhost:3000 automatically
-# The "proxy" in client/package.json forwards /api/* to port 5000
-```
-
-You should now see the app at **http://localhost:3000**.
+Then open **http://localhost:3000**.
 
 ---
 
 ## API Documentation
 
-Base URL (local): `http://localhost:5000/api/tasks`
+Base URL: `http://localhost:5000/api/tasks`
 
 ### `GET /api/tasks`
 
-Returns all tasks, sorted newest-first.
-
-**Query params (all optional):**
-
-| Param | Values | Description |
-|-------|--------|-------------|
-| `status` | `active` \| `completed` | Filter by completion status |
-| `search` | any string | Case-insensitive search in title + description |
+Returns all tasks, sorted newest-first, with computed `overdue` status.
 
 **Response `200`:**
 ```json
 [
   {
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "title": "Design login page",
-    "description": "Use Figma mockup v3",
+    "title": "Finish report",
+    "description": "Complete the monthly status report",
     "dueDate": "2024-12-31",
-    "assignee": "Priya",
     "completed": false,
-    "overdue": false,
-    "createdAt": "2024-06-01T10:30:00.000Z"
+    "order": 3,
+    "createdAt": "2024-06-01T10:30:00.000Z",
+    "overdue": false
   }
 ]
 ```
@@ -143,14 +86,13 @@ Creates a new task.
 **Request body:**
 ```json
 {
-  "title": "Design login page",        // required
-  "description": "Use Figma v3",       // optional
-  "dueDate": "2024-12-31",             // optional, YYYY-MM-DD
-  "assignee": "Priya"                  // optional
+  "title": "Finish report",
+  "description": "Complete the monthly status report",
+  "dueDate": "2024-12-31"
 }
 ```
 
-**Response `201`:** The created task object (same shape as above).
+**Response `201`:** Created task object.
 
 **Response `400`:**
 ```json
@@ -159,22 +101,41 @@ Creates a new task.
 
 ---
 
+### `PATCH /api/tasks/reorder`
+
+Updates task order after drag-and-drop.
+
+**Request body:**
+```json
+{
+  "orderedIds": ["id1", "id2", "id3"]
+}
+```
+
+**Response `200`:** Updated task list in new order.
+
+**Response `400`:**
+```json
+{ "error": "orderedIds must include every task id once" }
+```
+
+---
+
 ### `PATCH /api/tasks/:id`
 
-Updates any fields of an existing task. Only send the fields you want to change.
+Updates a task by ID.
 
-**Request body (all optional):**
+**Request body (any subset):**
 ```json
 {
   "title": "Updated title",
   "description": "New description",
   "dueDate": "2025-01-15",
-  "assignee": "Arjun",
   "completed": true
 }
 ```
 
-**Response `200`:** The updated task object.
+**Response `200`:** Updated task object.
 
 **Response `404`:**
 ```json
@@ -185,7 +146,7 @@ Updates any fields of an existing task. Only send the fields you want to change.
 
 ### `DELETE /api/tasks/:id`
 
-Deletes a task by ID.
+Deletes a task.
 
 **Response `200`:**
 ```json
@@ -201,7 +162,7 @@ Deletes a task by ID.
 
 ### `GET /api/tasks/stats`
 
-Returns summary counts (used for the stats bar).
+Returns task summary counts.
 
 **Response `200`:**
 ```json
@@ -215,73 +176,49 @@ Returns summary counts (used for the stats bar).
 
 ---
 
-## Features Implemented
+## Project Structure
 
-### Must Have ✅
-- Add task with title (required), description, due date, assignee
-- View all tasks sorted by creation date (newest first)
-- Toggle complete / incomplete
-- Edit title, description, due date, assignee
-- Delete with confirmation dialog
-- Filter by All / Active / Completed
-
-### Should Have ✅
-- Count of active vs completed tasks in the header stats bar
-- Overdue tasks visually highlighted in red
-- Empty state UI with helpful message
-
-### Bonus ✅
-- Search tasks by title or description
-- Assignee field (team extension of the original brief)
-
----
-
-## Deployment
-
-### Backend → Render (free tier)
-
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect your repo, set **Root Directory** to `server`
-4. Build command: `npm install`
-5. Start command: `node index.js`
-6. Copy the live URL (e.g. `https://task-api.onrender.com`)
-
-### Frontend → Vercel (free tier)
-
-1. Go to [vercel.com](https://vercel.com) → New Project → import your repo
-2. Set **Root Directory** to `client`
-3. Add environment variable: `REACT_APP_API_URL=https://task-api.onrender.com`
-4. Deploy
+```
+Team_Task_Manager/
+├── package.json              # root scripts for the monorepo
+├── README.md                 # project documentation
+├── .gitignore
+├── client/                   # React frontend
+│   ├── package.json
+│   ├── public/
+│   │   └── index.html
+│   └── src/
+│       ├── index.js
+│       ├── App.jsx
+│       ├── App.css
+│       ├── api/tasks.js
+│       ├── hooks/useTasks.js
+│       └── components/
+│           ├── TaskForm.jsx
+│           ├── TaskCard.jsx
+│           ├── FilterBar.jsx
+│           └── StatsBar.jsx
+└── server/                   # Express backend
+    ├── package.json
+    ├── index.js
+    ├── store.js              # file-backed JSON storage
+    ├── tasks.json            # persisted task data
+    └── routes/tasks.js       # task API endpoints
+```
 
 ---
 
-## What I Would Do Next (with more time)
+## Next Steps
 
-1. **Persistence** — Write tasks to a JSON file or SQLite so data survives server restarts
-2. **Drag-and-drop reordering** — Using `@dnd-kit/core`
-3. **Unit tests** — Jest tests for the Express routes (happy path + 404 cases)
-4. **Priority levels** — Low / Medium / High with colour coding
-5. **Due date reminders** — Toast notification for tasks due today
-6. **Authentication** — JWT-based login so different team members see their own tasks
-7. **TypeScript** — Add types to the API responses and hook return values
+- Deploy frontend and backend and add live demo URLs.
+- Add authentication so each user has a private task list.
+- Add task priority / tags / reminders.
+- Improve keyboard accessibility for drag-and-drop.
+- Add API and frontend tests.
 
 ---
 
-## What Works / What Doesn't
+## Notes
 
-| Feature | Status |
-|---------|--------|
-| Full CRUD (create, read, update, delete) | ✅ Works |
-| Filter by status | ✅ Works |
-| Search | ✅ Works |
-| Overdue highlighting | ✅ Works |
-| Stats bar | ✅ Works |
-| Data persistence across restart | ❌ In-memory only (by design for this assessment) |
-| Tests | ❌ Not included (ran out of time) |
-
----
-
-## AI Usage Disclosure
-
-Claude was used to help scaffold this project. Every line has been reviewed and I can explain any part of it in an interview.
+- The server currently persists task data to `server/tasks.json`.
+- The client applies filtering, searching, and due-date sorting locally.
