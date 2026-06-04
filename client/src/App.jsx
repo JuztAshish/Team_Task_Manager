@@ -113,9 +113,15 @@ function App() {
             <p className="empty-icon">📋</p>
             <h2>No tasks yet</h2>
             <p>
-              {search || filter !== "all"
-                ? "Try a different filter or search term."
-                : "Click \"+ New Task\" to get started."}
+              {search ? (
+                "Try a different filter or search term."
+              ) : filter === "completed" ? (
+                "No completed tasks yet."
+              ) : filter === "active" ? (
+                "No active tasks yet."
+              ) : (
+                "Click \"+ New Task\" to get started."
+              )}
             </p>
           </div>
         )}
