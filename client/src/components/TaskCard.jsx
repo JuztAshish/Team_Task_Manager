@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AlertTriangle, Calendar, Edit2, Trash2, Check } from "lucide-react";
 import TaskForm from "./TaskForm";
 
 // Task card: displays task details, supports drag-and-drop reordering and inline editing
@@ -69,7 +70,7 @@ function TaskCard({
           onClick={() => onToggle(task.id, task.completed)}
           aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
         >
-          {task.completed && "✓"}
+          {task.completed && <Check size={14} />}
         </button>
 
         <div className="task-content">
@@ -82,7 +83,13 @@ function TaskCard({
           <div className="task-meta">
             {task.dueDate && (
               <span className={`badge ${task.overdue ? "badge-overdue" : "badge-date"}`}>
-                {task.overdue ? "⚠️ Overdue · " : "📅 "}
+                {task.overdue ? (
+                  <>
+                    <AlertTriangle size={14} style={{ marginRight: 6 }} /> Overdue · 
+                  </>
+                ) : (
+                  <Calendar size={14} style={{ marginRight: 6 }} />
+                )}
                 {formatDate(task.dueDate)}
               </span>
             )}
@@ -96,7 +103,7 @@ function TaskCard({
             aria-label="Edit task"
             title="Edit"
           >
-            ✏️
+            <Edit2 size={16} />
           </button>
           <button
             className="btn-icon btn-icon-danger"
@@ -104,7 +111,7 @@ function TaskCard({
             aria-label="Delete task"
             title="Delete"
           >
-            🗑️
+            <Trash2 size={16} />
           </button>
         </div>
       </div>

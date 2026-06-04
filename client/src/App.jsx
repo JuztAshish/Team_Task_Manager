@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X, Plus, Clipboard, AlertTriangle } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import TaskForm from "./components/TaskForm";
 import TaskCard from "./components/TaskCard";
@@ -72,7 +73,15 @@ function App() {
             className="btn btn-primary"
             onClick={() => setShowForm((prev) => !prev)}
           >
-            {showForm ? "✕ Cancel" : "+ New Task"}
+            {showForm ? (
+              <>
+                <X size={16} style={{ marginRight: 8 }} /> Cancel
+              </>
+            ) : (
+              <>
+                <Plus size={16} style={{ marginRight: 8 }} /> New Task
+              </>
+            )}
           </button>
         </div>
 
@@ -104,13 +113,17 @@ function App() {
 
         {error && (
           <div className="state-message error-state">
-            <p>⚠️ {error}</p>
+            <p>
+              <AlertTriangle size={18} style={{ marginRight: 8 }} /> {error}
+            </p>
           </div>
         )}
 
         {!loading && !error && tasks.length === 0 && (
           <div className="empty-state">
-            <p className="empty-icon">📋</p>
+            <div className="empty-icon">
+              <Clipboard size={48} />
+            </div>
             <h2>No tasks yet</h2>
             <p>
               {search ? (

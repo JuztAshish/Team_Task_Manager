@@ -1,4 +1,5 @@
 import sortIcon from "./sort-svgrepo-com.svg";
+import { Search, X } from "lucide-react";
 
 // Filter bar: status filter buttons, sort by due date, and search
 function FilterBar({ filter, setFilter, search, setSearch, sortDue, setSortDue }) {
@@ -30,7 +31,7 @@ function FilterBar({ filter, setFilter, search, setSearch, sortDue, setSortDue }
       </div>
 
       <div className="search-wrapper">
-        <span className="search-icon">🔍</span>
+        <span className="search-icon"><Search size={16} /></span>
         <input
           type="text"
           className="search-input"
@@ -39,8 +40,8 @@ function FilterBar({ filter, setFilter, search, setSearch, sortDue, setSortDue }
           onChange={(e) => setSearch(e.target.value)}
         />
         {search && (
-          <button className="search-clear" onClick={() => setSearch("")}>
-            ✕
+          <button className="search-clear" onClick={() => setSearch("")} aria-label="Clear search">
+            <X size={14} />
           </button>
         )}
       </div>
