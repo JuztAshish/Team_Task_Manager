@@ -87,7 +87,6 @@ function App() {
         )}
 
         <FilterBar
-        <FilterBar
           filter={filter}
           setFilter={setFilter}
           search={search}
@@ -95,11 +94,7 @@ function App() {
           sortDue={sortDue}
           setSortDue={setSortDue}
         />
-        {showForm && (
-          <div className="form-container">
-            <TaskForm onSubmit={handleAdd} onCancel={() => setShowForm(false)} />
-          </div>
-        )}
+
         {loading && (
           <div className="state-message">
             <div className="spinner" />
@@ -113,7 +108,6 @@ function App() {
           </div>
         )}
 
-        {!loading && !error && tasks.length === 0 && (
         {!loading && !error && tasks.length === 0 && (
           <div className="empty-state">
             <p className="empty-icon">📋</p>
