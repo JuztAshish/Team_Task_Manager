@@ -12,7 +12,7 @@ A full-stack personal task manager built as a monorepo with a React frontend and
 
 ## Live Demo Links
 
-- **Frontend:** Not deployed yet
+- **Frontend:** https://team-task-manager-uixd.vercel.app/
 - **Backend:** https://team-task-manager-6weh.onrender.com
 
 > The frontend defaults to the deployed backend above. To run the frontend against
